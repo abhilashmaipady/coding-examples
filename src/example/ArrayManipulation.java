@@ -1,39 +1,50 @@
 package example;
 
+import ref.BinaryTreeNode;
+
 public class ArrayManipulation {
 
 	static long arrayManipulation(int n, int[][] queries) {
 
-		// Create Array based on number of element n
-		long[] arr = new long[n];
-		// Initializing all elements in array to zero
-		for(int i=0; i<n ;i++) {
-			arr[i]=0;
+		int[] rootItem = queries[0];
+		BinaryTreeNode root = new BinaryTreeNode(rootItem[0], rootItem[1], rootItem[2]);
+		for(int i=1; i < n; i++) {
+			int[] item = queries[i];
+			root.insert(root, item[0], item[1], item[2] - 1);
 		}
-		
-		
-		for(int[] row: queries){
-			// substracting 1 to normalize with array index
-			int i = row[0] - 1;
-			int j = row[1] - 1;
-			int k = row[2];
-			
-			while(i <= j) {
-				arr[i++] += k;
-			}
-		}
-		
+				
+		return findMaxValue(root);
+    }
+	
+	static long findMaxValue(BinaryTreeNode root) {
 		long maxValue = 0;
-		for(int i = 0 ; i < n ; i++) {
-			maxValue = maxValue > arr[i] ? maxValue : arr[i];
+		if(null == root) {
+			return maxValue;
+		}
+		
+		if(root.getValue() > maxValue) {
+			maxValue = root.getValue();
+		}
+		long leftMaxValue = findMaxValue(root.left);
+		if(leftMaxValue > maxValue) {
+			maxValue = leftMaxValue;
+		}
+		long rightMaxValue = findMaxValue(root.right);
+		if(rightMaxValue > maxValue) {
+			maxValue = rightMaxValue;
 		}
 		return maxValue;
-    }
+	}
+	
+	static void printBinaryTree(BinaryTreeNode root) {
+		
+	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int n = 5;
+		int n = 3;
 		int[][] queries = new int[][] {{1,2,100},{2,5,100},{3,4,100}};
+		
 		System.out.println(arrayManipulation(n, queries));
 	}
 
